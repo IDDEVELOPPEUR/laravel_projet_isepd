@@ -10,5 +10,7 @@ class EtudiantController extends Controller
     public function etudiants (){
         return view('les-etudiants');
     }
+
+
     //
 }

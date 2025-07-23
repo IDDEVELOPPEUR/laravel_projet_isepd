@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -23,6 +24,20 @@ class AuthController extends Controller
         return view('home');
     }
 
+    public function connecter(Request $request){
+
+
+        if (Auth::attempt($request->only('email','password'))){
+           return redirect("/accueil");
+        }
+        return back()->with("status","Le mot de passe ou email est incorrect !");
+
+    }
+
+    public function deconnecter (){
+        Auth::logout();
+        return redirect("/login");
+    }
 
     public function inscrire(Request $request){
 
