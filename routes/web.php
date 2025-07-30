@@ -16,6 +16,8 @@ Route::get('/accueil',[AuthController::class,'accueilPage']);
 Route::get('/changerMotDePasse',[AuthController::class,'changerMotDePassePage']);
 Route::get('/envoyerEmail',[AuthController::class,'envoyerEmailPage']);
 Route::get('/changerMotPassEtConf',[AuthController::class,'changerMotPassEtConfPage']);
+Route::get('/reset-password/{token}',[AuthController::class,'resetPasswordForm']);
+
 
 
 //pour les routes metieres
@@ -25,3 +27,4 @@ Route::post('/deconnexion',[AuthController::class,'deconnecter']);
 Route::post('/changerMotDePasse',[AuthController::class,'changerMotDePasse']);
 Route::post('/envoyerEmail',[AuthController::class,'envoyerEmail']);
 Route::post('/changementMotPassEtConf',[AuthController::class,'changerMotPassEtConf']);
+

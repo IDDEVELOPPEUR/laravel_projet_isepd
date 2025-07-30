@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class AuthController extends Controller
@@ -102,22 +104,47 @@ public function changerMotPassEtConfPage(){
         return view('changerMotReset');
 }
 
+public function resetPasswordForm($token){
+        return view('reset',compact('token'));
+}
 
 //parties metier
+
 public function changerMotPassEtConf(Request $request){
+        return $request;
 
 }
+
+
 public function envoyerEmail(Request $request){
 
         //les contraintes  pour la validation du champ email
     $request->validate([
         'email'=>'required|email|exists:users,email'
     ]);
-    $token= Str::random(40);
 
+    try {
+        //la variable token avec la fonction aléatoire Str::random(40)
+        $token= Str::random(40);
 
+//    $user=User::where('email',$request->email)->first();
+        DB::table("password_resets")->where("email",$request->email) ->delete();
 
-        return $token;
+        DB::table("password_resets")->insert([
+            'email'=>$request->email,
+            'token'=>$token,
+            'created_at'=>now()
+        ]);
+        Mail::send('verification',compact('token'),function ($message) use ($request){
+            $message->to($request->email)->subject('Email de réinitialisation de mot de passe');
+            $message->from(config("mail.from.address"),config("mail.from.name"));
+        });
+        return back()->with("status","un email de réinitialisation de mot de passe vous a été envoyé");
+    }catch (\Exception $e){
+        return back()->with("status","erreur lors de l'envoie de l'email");
+    }
+
+return "";
 
 }
 

@@ -20,12 +20,17 @@
         @csrf
 
         <div class="mb-3 form-group">
-            <label for="password">Nouveau Mot de passe</label>
-            <input type="password" class="form-control" id="Npassword" name="Npassword" placeholder="**************">
+            <label for="password">Email:</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="mettez votre email">
         </div>
+           <div class="mb-3 form-group">
+            <label for="password">Nouveau Mot de passe</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="**************">
+        </div>
+
         <div class="mb-3 form-group">
-            <label for="password">Confirmer Mot de passe</label>
-            <input type="password" class="form-control" id="Cpassword" name="Cpassword" placeholder="**************">
+            <label for="confirmation_password">Confirmer Mot de passe</label>
+            <input type="password" class="form-control" id="confirmation_password" name="confirmation_password" placeholder="**************">
         </div>
 
         <div class="text-center">

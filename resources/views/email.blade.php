@@ -16,7 +16,7 @@
     @endif
     <h1 class="text-center text-success my-3 ">Changer votre mot de passe</h1>
     @foreach($errors->all() as $error)
-    <li>{{$error}} </li>
+    <li class="h4 text-center text-danger ">{{$error}} </li>
     @endforeach
     <form action ="/envoyerEmail" method="post">
         @csrf
