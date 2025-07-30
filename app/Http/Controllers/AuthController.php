@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -60,8 +61,6 @@ class AuthController extends Controller
             'password'=>'required|string|min:8|confirmed',
         ]);
 //        $user=new User();
-//
-//
 //                $user->prenom = $request->prenom;
 //                $user->nom = $request->nom;
 //                $user->telephone = $request->telephone;
@@ -89,4 +88,37 @@ class AuthController extends Controller
 //return redirect("login",compact('request'));
 
     }
+
+
+    public function changerMotDePassePage(){
+        return view('changerMotDePasse');
+}
+
+public function envoyerEmailPage(){
+        return view('email');
+}
+
+public function changerMotPassEtConfPage(){
+        return view('changerMotReset');
+}
+
+
+//parties metier
+public function changerMotPassEtConf(Request $request){
+
+}
+public function envoyerEmail(Request $request){
+
+        //les contraintes  pour la validation du champ email
+    $request->validate([
+        'email'=>'required|email|exists:users,email'
+    ]);
+    $token= Str::random(40);
+
+
+
+        return $token;
+
+}
+
 }
