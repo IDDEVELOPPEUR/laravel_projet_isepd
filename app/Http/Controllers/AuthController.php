@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -93,7 +95,13 @@ class AuthController extends Controller
 
 
     public function changerMotDePassePage(){
-        return view('changerMotDePasse');
+        if (Auth::check()){
+            $email=Auth::user()->email;
+            return  view('forget',compact("email"));
+        }
+
+
+        return redirect('/login')->with("status","vous devez être connecté pour acceder a cette page");;
 }
 
 public function envoyerEmailPage(){
@@ -111,7 +119,57 @@ public function resetPasswordForm($token){
 //parties metier
 
 public function changerMotPassEtConf(Request $request){
-        return $request;
+        //la validationdes champs au niveau du formulaire
+$request->validate([
+    "email"=>"required|email|exists:password_resets,email",
+    "password"=>"required|string|min:8|confirmed",
+    "token"=>"required|string"
+]);
+
+
+$user=DB::table('password_resets')->where('email',$request->email)->first();
+//return $user->token.'/'.$request->token;
+    if (!hash_equals($user->token,$request->token))
+    {
+        return back()->with("status","invalide token");
+    }
+
+    if (Carbon::parse($user->created_at)->addMinutes(720)->isPast()){
+        return back()->with("status","LE LIEN DE REINITIALISATION EST EXPIRÉ");
+    }
+
+//        return back()->with("status","valide token");
+    //premiere maniere de changement
+    $userChanger= DB::table('users')->where('email',$request->email);
+    if ($userChanger){
+        $motPassEncrypt=Crypt::encrypt($request->getPassword());
+        $userChanger->update([
+           //Normal mais pas encore crypté
+//            'password'=>$request->password
+
+        //MA PROPOSITION
+           'password'=>$motPassEncrypt
+        ]);
+        return redirect("/login")->with("status","mot de passe changé avec succes !");;
+    }
+    return back()->with("status","erreur lors du changement du mot de passe");
+
+
+
+    //deuxieme maniere pour faire le
+//$userChange=User::where('email',$request->email)->update([
+//    'password'=>$request->password
+//]);
+
+
+
+//if ( !$user || !hash_equals($user->token,$request->token)){
+//
+//    return back()->with("status","invalide token");
+//} //else{
+//    return back()->with("status","non existe");
+//}
+
 
 }
 
@@ -147,5 +205,18 @@ public function envoyerEmail(Request $request){
 return "";
 
 }
+
+    public function changerMotDePasse(Request $request){
+        $request->validate([
+
+            'password'=>'required|string|min:8|confirmed',
+        ]);
+        $verifier_password=password_verify($request->actuel_password,Auth::user()->password);
+        if ($verifier_password){
+
+            return back()->with("status","mot de passe modifié avec succes !");
+        }
+            return back()->with("status","error !");
+    }
 
 }

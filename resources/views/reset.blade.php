@@ -15,9 +15,19 @@
     <div>{{session('status')}}</div>
     @endif
 
-    <h1 class="text-center text-success my-3 ">Réinitialisation de mot de passe</h1>
+    <h1 class="text-center text-success my-3 ">Réinitialisation du mot de passe</h1>
+    <ul>
+
+        @foreach($errors->all() as $error)
+        <li>{{$error}} </li>
+
+        @endforeach
+    </ul>
+
     <form action ="/changementMotPassEtConf" method="post">
         @csrf
+
+        <input type="hidden" name = "token" value = "{{ $token }}">
         <div class="mb-3 form-group">
             <label for="password">Email:</label>
             <input type="email" class="form-control" id="email" name="email" placeholder="mettez votre email">
@@ -29,7 +39,7 @@
 
         <div class="mb-3 form-group">
             <label for="confirmation_password">Confirmer Mot de passe</label>
-            <input type="password" class="form-control" id="confirmation_password" name="confirmation_password" placeholder="**************">
+            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="**************">
         </div>
 
         <div class="text-center">

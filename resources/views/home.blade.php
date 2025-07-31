@@ -17,7 +17,7 @@
         <div class="navbar-nav">
             <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
             <a class="nav-item nav-link" href="#">Features</a>
-            <a class="nav-item nav-link" href="#">Pricing</a>
+            <a class="btn btn-success mx-2" href="/changerMotDePasse">Changer mot de passe</a>
             <form action="/deconnexion" method="post">
                 @csrf
                 <button class="btn btn-danger">Déconnexion</button>
@@ -30,5 +30,3 @@
 </body>
 </html>
 
-
-Bonjour {{Auth::user()->prenom}} {{Auth::user()->nom}}
